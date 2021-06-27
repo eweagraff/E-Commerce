@@ -22,6 +22,8 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
   Tag.create({
     tag_name: req.body.tag_name,
+    product_id: req.body.product_id,
+    tag_id: req.body.tag_id,
   })
     .then((tagData) => res.json(tagData))
     .catch((err) => {
@@ -33,14 +35,10 @@ router.post("/", (req, res) => {
 
 router.put("/:id", (req, res) => {
   Tag.update(
-    {
-      tag_name: req.body.tag_name,
-      product_id: req.body.product_id,
-      tag_id: req.body.tag_id,
-    },
+    req.body,
     {
       where: {
-        tag_id: req.params.tag_id,
+        id: req.params.id,
       },
     }
     // update a tag's name by its `id` value
@@ -52,7 +50,16 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  // delete on tag by its `id` value
+  Tag.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((deletedTag) => {
+      res.json(deletedTag);
+    })
+    .catch((err) => res.json(err));
+  // delete a category by its `id` value
 });
 
 module.exports = router;
